@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
         // First off, create Mika and Myself as SUPER
         $super = new User();
         $super->setUsername("leerlandais");
-        $super->setRoles()
+        $super->setRoles("ROLE_SUPER");
 
         $manager->flush();
     }
