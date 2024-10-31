@@ -66,7 +66,7 @@ class AppFixtures extends Fixture
         $super->setUniqid(uniqid('user_', true));
         $super->setEmail("lee@leerlandais.com");
         $super->setActivate(true);
-        $super->setImgLoc($this->createImage());
+        $super->setImgLoc("../assets/img/lee.jpg");
 
         $this->admins[] = $super;
         $manager->persist($super);
@@ -79,7 +79,7 @@ class AppFixtures extends Fixture
         $super->setUniqid(uniqid('user_', true));
         $super->setEmail("michael.pitz@cf2m.be");
         $super->setActivate(true);
-        $super->setImgLoc($this->createImage());
+        $super->setImgLoc("../assets/img/mjp.jpg");
 
         $this->admins[] = $super;
         $manager->persist($super);
