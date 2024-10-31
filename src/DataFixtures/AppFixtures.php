@@ -158,6 +158,7 @@ class AppFixtures extends Fixture
             $articles[] = $article;
             $manager->persist($article);
         }
+
         $artLength = count($articles); // decided to adjust the amount of sections, tags, etc dynamically by the amount of articles
 
         $manager->flush();
@@ -172,7 +173,7 @@ class AppFixtures extends Fixture
 
             $this->sections[] = $section;
 
-            shuffle($articles);
+            shuffle($articles); // I could copy the array and shuffle that, leaving the original array alone...
 
             $nbArt = mt_rand(($artLength / 8), ($artLength / 4));
 
@@ -184,6 +185,32 @@ class AppFixtures extends Fixture
             $manager->persist($section);
         }
 
+        $tagCount = min(($artLength / 4), 25);
+
+        shuffle($articles); // ...or I could shuffle it again :)
+
+
+        for ($i = 0; $i < $tagCount; $i++) {
+            $tag = new Tag();
+            $tag->setTagName($this->faker->word());
+            $tag->setTagSlug($this->slugify->slugify($tag->getTagName())); // as tags are a single word, it's, maybe unnecessary to slug them but to ensure no possible error, I'll do it anyway
+
+            $this->tags[] = $tag;
+
+            $arts = $articles;
+            shuffle($arts);
+            $nbArt = mt_rand(($artLength / 4), ($artLength / 2));
+            $randArts = array_slice($arts, 0, $nbArt);
+            foreach ($randArts as $art) {
+                $tag->addArticle($art);
+            }
+
+            $manager->persist($tag);
+        }
+
+        /*
+         * add comments here
+         */
 
         $manager->flush();
     }
