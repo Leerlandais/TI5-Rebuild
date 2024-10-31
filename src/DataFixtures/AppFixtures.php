@@ -23,14 +23,15 @@ class AppFixtures extends Fixture
     public function __construct(UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
-        $this->faker = Faker::create("fr_FR");
+        $this->faker = Faker::create("en_GB");
         $this->slugify = new Slugify();
     }
 
     public function load(ObjectManager $manager): void
     {
-
+        // create these here so they're available in the full scope of the function
         $admins = [];
+        $users = [];
 
         // First off, create Mika and Myself as SUPER
         $super = new User();
@@ -57,6 +58,7 @@ class AppFixtures extends Fixture
         $this->admins[] = $super;
         $manager->persist($super);
 
+        // then the admin user
         $admin = new User();
         $admin->setUsername("admin");
         $admin->setRoles(["ROLE_ADMIN"]);
@@ -69,6 +71,7 @@ class AppFixtures extends Fixture
         $this->admins[] = $admin;
         $manager->persist($admin);
 
+        // and the redac users
         for ($i = 1; $i < 6; $i++) {
             $redac = new User();
             $redac->setUsername("redac".$i);
@@ -83,6 +86,20 @@ class AppFixtures extends Fixture
             $manager->persist($redac);
         }
 
+        // and finally the entry level users
+        for ($i = 1; $i < 25; $i++) {
+            $user = new User();
+            $user->setUsername("user".$i);
+            $user->setRoles(["ROLE_USER"]);
+            $user->setPassword($this->hasher->hashPassword($user, "user".$i));
+            $user->setFullname($this->faker->name());
+            $user->setUniqid(uniqid('user_', true));
+            $user->setEmail($this->faker->email());
+            $user->setActivate(mt_rand(0, 3));
+
+            $this->users[] = $user;
+            $manager->persist($user);
+        }
 
 
 
