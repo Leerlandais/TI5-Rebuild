@@ -51,11 +51,17 @@ class AppFixtures extends Fixture
         return ("https://randomuser.me/api/portraits/$sex/$img.jpg");
     }
 
+    private function createPubDate($maxDate): DateTime
+    {
+        return $this->faker->dateTimeBetween($maxDate,(clone $maxDate)->modify('+2 months'));
+    }
+
     public function load(ObjectManager $manager): void
     {
         $admins = [];
         $users = [];
         $articles = [];
+        $sections = [];
 
         // First off, create Mika and Myself as SUPER
         $super = new User();
@@ -130,6 +136,8 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        $manager->flush(); // turns out multiple flushes are permitted in on load
+
         // Now, create the articles
         for ($i = 0; $i < 160; $i++) {
             $article = new Article();
@@ -138,13 +146,43 @@ class AppFixtures extends Fixture
             $article->setTitle($this->createTitle(mt_rand(10,40)));
             $article->setTitleSlug($this->slugify->slugify($article->getTitle()));
             $article->setText($this->createText(mt_rand(4,10)));
-            $article->setArticleDateCreated($this->faker->dateTime());
-            $article->setArticleDatePosted($this->faker->dateTime());
-            $article->setPublished(true);
+            $date = $this->faker->dateTimeThisDecade();
+            $article->setArticleDateCreated($date);
+            $isPub = mt_rand(0, 4);
+            $article->setPublished($isPub);
+            if ($isPub) {
+                $datePub = $this->createPubDate($date);
+                $article->setArticleDatePosted($datePub);
+            }
 
             $this->articles[] = $article;
             $manager->persist($article);
         }
+        $artLength = count($this->articles); // decided to adjust the amount of sections, tags, etc dynamically by the amount of articles
+
+        $manager->flush();
+/*
+        $sectionCount = ($artLength / 10) > 6 ? 6 : ($artLength / 10);
+
+        for ($i = 0; $i < $sectionCount; $i++) {
+            $section = new Section();
+            $section->setSectionTitle($this->createTitle(mt_rand(10, 15)));
+            $section->setSectionSlug($this->slugify->slugify($section->getSectionTitle()));
+            $section->setSectionDetail($this->createText(mt_rand(1,1)));
+
+            $this->sections[] = $section;
+
+            shuffle($articles);
+            $nbArt = mt_rand(($artLength / 8), ($artLength / 4));
+
+            $randArts = array_slice($articles, 0, $nbArt);
+            foreach ($randArts as $art) {
+                $section->addArticle($art);
+            }
+
+            $manager->persist($section);
+        }
+*/
 
         $manager->flush();
     }
