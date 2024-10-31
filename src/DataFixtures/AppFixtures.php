@@ -57,18 +57,30 @@ class AppFixtures extends Fixture
         $this->admins[] = $super;
         $manager->persist($super);
 
-        for ($i = 0; $i < 5; $i++) {
-            $admin = new User();
-            $admin->setUsername("admin".$i);
-            $admin->setRoles(["ROLE_ADMIN"]);
-            $admin->setPassword($this->hasher->hashPassword($super, "admin".$i));
-            $admin->setFullname($this->faker->name());
-            $admin->setUniqid(uniqid('user_', true));
-            $admin->setEmail($this->faker->email());
-            $admin->setActivate(true);
+        $admin = new User();
+        $admin->setUsername("admin");
+        $admin->setRoles(["ROLE_ADMIN"]);
+        $admin->setPassword($this->hasher->hashPassword($admin, "admin"));
+        $admin->setFullname($this->faker->name());
+        $admin->setUniqid(uniqid('user_', true));
+        $admin->setEmail($this->faker->email());
+        $admin->setActivate(true);
 
-            $this->admins[] = $admin;
-            $manager->persist($admin);
+        $this->admins[] = $admin;
+        $manager->persist($admin);
+
+        for ($i = 1; $i < 6; $i++) {
+            $redac = new User();
+            $redac->setUsername("redac".$i);
+            $redac->setRoles(["ROLE_REDAC"]);
+            $redac->setPassword($this->hasher->hashPassword($redac, "redac".$i));
+            $redac->setFullname($this->faker->name());
+            $redac->setUniqid(uniqid('user_', true));
+            $redac->setEmail($this->faker->email());
+            $redac->setActivate(true);
+
+            $this->admins[] = $redac;
+            $manager->persist($redac);
         }
 
 
