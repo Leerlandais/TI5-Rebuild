@@ -57,6 +57,20 @@ class AppFixtures extends Fixture
         $this->admins[] = $super;
         $manager->persist($super);
 
+        for ($i = 0; $i < 5; $i++) {
+            $admin = new User();
+            $admin->setUsername("admin".$i);
+            $admin->setRoles(["ROLE_ADMIN"]);
+            $admin->setPassword($this->hasher->hashPassword($super, "admin".$i));
+            $admin->setFullname($this->faker->name());
+            $admin->setUniqid(uniqid('user_', true));
+            $admin->setEmail($this->faker->email());
+            $admin->setActivate(true);
+
+            $this->admins[] = $admin;
+            $manager->persist($admin);
+        }
+
 
 
 
