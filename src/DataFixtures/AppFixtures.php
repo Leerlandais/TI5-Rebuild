@@ -43,6 +43,14 @@ class AppFixtures extends Fixture
 
     }
 
+    private function createImage()
+    {
+
+        $sex = mt_rand(0, 1) ? "men" : "women";
+        $img = mt_rand(1, 99);
+        return ("https://randomuser.me/api/portraits/$sex/$img.jpg");
+    }
+
     public function load(ObjectManager $manager): void
     {
         $admins = [];
@@ -58,6 +66,7 @@ class AppFixtures extends Fixture
         $super->setUniqid(uniqid('user_', true));
         $super->setEmail("lee@leerlandais.com");
         $super->setActivate(true);
+        $super->setImgLoc($this->createImage());
 
         $this->admins[] = $super;
         $manager->persist($super);
@@ -70,6 +79,7 @@ class AppFixtures extends Fixture
         $super->setUniqid(uniqid('user_', true));
         $super->setEmail("michael.pitz@cf2m.be");
         $super->setActivate(true);
+        $super->setImgLoc($this->createImage());
 
         $this->admins[] = $super;
         $manager->persist($super);
@@ -83,6 +93,7 @@ class AppFixtures extends Fixture
         $admin->setUniqid(uniqid('user_', true));
         $admin->setEmail($this->faker->email());
         $admin->setActivate(true);
+        $admin->setImgLoc($this->createImage());
 
         $this->admins[] = $admin;
         $manager->persist($admin);
@@ -97,6 +108,7 @@ class AppFixtures extends Fixture
             $redac->setUniqid(uniqid('user_', true));
             $redac->setEmail($this->faker->email());
             $redac->setActivate(true);
+            $redac->setImgLoc($this->createImage());
 
             $this->admins[] = $redac;
             $manager->persist($redac);
@@ -112,6 +124,7 @@ class AppFixtures extends Fixture
             $user->setUniqid(uniqid('user_', true));
             $user->setEmail($this->faker->email());
             $user->setActivate(mt_rand(0, 3));
+            $user->setImgLoc($this->createImage());
 
             $this->users[] = $user;
             $manager->persist($user);
