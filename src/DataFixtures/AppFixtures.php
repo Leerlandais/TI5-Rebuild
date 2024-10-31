@@ -155,14 +155,14 @@ class AppFixtures extends Fixture
                 $article->setArticleDatePosted($datePub);
             }
 
-            $this->articles[] = $article;
+            $articles[] = $article;
             $manager->persist($article);
         }
-        $artLength = count($this->articles); // decided to adjust the amount of sections, tags, etc dynamically by the amount of articles
+        $artLength = count($articles); // decided to adjust the amount of sections, tags, etc dynamically by the amount of articles
 
         $manager->flush();
-/*
-        $sectionCount = ($artLength / 10) > 6 ? 6 : ($artLength / 10);
+
+        $sectionCount = min(($artLength / 10), 6); // Some more PHPStorm, it replaced $sectionCount = ($artLength / 10) > 6 ? 6 : ($artLength / 10);
 
         for ($i = 0; $i < $sectionCount; $i++) {
             $section = new Section();
@@ -173,6 +173,7 @@ class AppFixtures extends Fixture
             $this->sections[] = $section;
 
             shuffle($articles);
+
             $nbArt = mt_rand(($artLength / 8), ($artLength / 4));
 
             $randArts = array_slice($articles, 0, $nbArt);
@@ -182,9 +183,10 @@ class AppFixtures extends Fixture
 
             $manager->persist($section);
         }
-*/
+
 
         $manager->flush();
     }
 }
+
 
