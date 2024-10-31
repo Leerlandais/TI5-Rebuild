@@ -24,12 +24,16 @@ class AppFixtures extends Fixture
     {
         $this->hasher = $hasher;
         $this->faker = Faker::create("fr_FR");
+        $this->slugify = new Slugify();
     }
 
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
+
+        // First off, create Mika and Myself as SUPER
+        $super = new User();
+        $super->setUsername("leerlandais");
+        $super->setRoles()
 
         $manager->flush();
     }
