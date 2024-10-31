@@ -27,11 +27,27 @@ class AppFixtures extends Fixture
         $this->slugify = new Slugify();
     }
 
+    private function createTitle($nb)
+    {
+        return $this->faker->realText($nb);
+
+    }
+
+    private function createText($nb)
+    {
+        $paragraphs = [];
+        for ($i = 0; $i < $nb; $i++) {
+            $paragraphs[] = $this->faker->realText(mt_rand(150, 300));
+        }
+        return implode("\n\n", $paragraphs);
+
+    }
+
     public function load(ObjectManager $manager): void
     {
-        // create these here so they're available in the full scope of the function
         $admins = [];
         $users = [];
+        $articles = [];
 
         // First off, create Mika and Myself as SUPER
         $super = new User();
@@ -101,8 +117,23 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
+        // Now, create the articles
+        for ($i = 0; $i < 160; $i++) {
+            $article = new Article();
+            $randUser = array_rand($this->admins);
+            $article->setUser($this->admins[$randUser]);
+            $article->setTitle($this->createTitle(mt_rand(10,40)));
+            $article->setTitleSlug($this->slugify->slugify($article->getTitle()));
+            $article->setText($this->createText(mt_rand(4,10)));
+            $article->setArticleDateCreated($this->faker->dateTime());
+            $article->setArticleDatePosted($this->faker->dateTime());
+            $article->setPublished(true);
 
+            $this->articles[] = $article;
+            $manager->persist($article);
+        }
 
         $manager->flush();
     }
 }
+
