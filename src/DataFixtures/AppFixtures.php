@@ -16,6 +16,7 @@ use App\Entity\User;
 use App\Entity\Article;
 use App\Entity\Section;
 use App\Entity\Tag;
+use App\Entity\Comment;
 class AppFixtures extends Fixture
 {
 
@@ -155,15 +156,16 @@ class AppFixtures extends Fixture
                 $article->setArticleDatePosted($datePub);
             }
 
-            $articles[] = $article;
+            $this->articles[] = $article;
             $manager->persist($article);
         }
+            $artLength = count($this->articles); // decided to adjust the amount of sections, tags, etc dynamically by the amount of articles
 
-        $artLength = count($articles); // decided to adjust the amount of sections, tags, etc dynamically by the amount of articles
 
         $manager->flush();
 
         $sectionCount = min(($artLength / 10), 6); // Some more PHPStorm, it replaced $sectionCount = ($artLength / 10) > 6 ? 6 : ($artLength / 10);
+            $arts = $this->articles;
 
         for ($i = 0; $i < $sectionCount; $i++) {
             $section = new Section();
@@ -173,11 +175,11 @@ class AppFixtures extends Fixture
 
             $this->sections[] = $section;
 
-            shuffle($articles); // I could copy the array and shuffle that, leaving the original array alone...
+            shuffle($arts); // I could copy the array and shuffle that, leaving the original array alone...
 
             $nbArt = mt_rand(($artLength / 8), ($artLength / 4));
 
-            $randArts = array_slice($articles, 0, $nbArt);
+            $randArts = array_slice($arts, 0, $nbArt);
             foreach ($randArts as $art) {
                 $section->addArticle($art);
             }
@@ -187,7 +189,7 @@ class AppFixtures extends Fixture
 
         $tagCount = min(($artLength / 4), 25);
 
-        shuffle($articles); // ...or I could shuffle it again :)
+        shuffle($arts); // ...or I could shuffle it again :)
 
 
         for ($i = 0; $i < $tagCount; $i++) {
@@ -197,8 +199,6 @@ class AppFixtures extends Fixture
 
             $this->tags[] = $tag;
 
-            $arts = $articles;
-            shuffle($arts);
             $nbArt = mt_rand(($artLength / 4), ($artLength / 2));
             $randArts = array_slice($arts, 0, $nbArt);
             foreach ($randArts as $art) {
@@ -208,9 +208,21 @@ class AppFixtures extends Fixture
             $manager->persist($tag);
         }
 
-        /*
-         * add comments here
-         */
+        for ($i = 0; $i < $artLength / 2; $i++) {
+            $comment = new Comment();
+            $randArt = array_rand($this->articles);
+            $artDate = $this->articles[$randArt]->getArticleDateCreated();
+            $comment->setCommentDateCreated($this->createPubDate($artDate));
+            $comment->setVisible(true);
+            // dd($randArt);
+            $comment->setArticle($this->articles[$randArt]);
+            $randUser = array_rand($this->users);
+            $comment->setUserId($randUser);
+            $commentLen = mt_rand(100, 500);
+            $comment->setCommentText($this->createText($commentLen));
+            $manager->persist($comment);
+        }
+
 
         $manager->flush();
     }

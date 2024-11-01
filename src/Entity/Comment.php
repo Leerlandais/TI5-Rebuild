@@ -32,6 +32,9 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Article $article = null;
 
+    #[ORM\Column(length: 512)]
+    private ?string $comment_text = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +108,18 @@ class Comment
     public function setArticle(?Article $article): static
     {
         $this->article = $article;
+
+        return $this;
+    }
+
+    public function getCommentText(): ?string
+    {
+        return $this->comment_text;
+    }
+
+    public function setCommentText(string $comment_text): static
+    {
+        $this->comment_text = $comment_text;
 
         return $this;
     }
