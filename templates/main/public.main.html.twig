@@ -11,11 +11,13 @@
                 {% for article in pagination.items %}
                     <article class="flex flex-col shadow my-4">
                         <!-- Article Image -->
-                        <a href="#" class="hover:opacity-75">
-                            <img src="https://source.unsplash.com/collection/1346951/1000x500?sig=1" alt="missing image">
-                        </a>
                         <div class="bg-white flex flex-col justify-start p-6">
-                            <a href="#" class="text-blue-700 text-sm font-bold uppercase pb-4">test</a>
+                        <a href="#" class="hover:opacity-75">
+                            {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
+                            <img src="{{ imgSrc }}" alt="missing image" class="float-right h-32 w-32">
+
+                        </a>
+
                         <a href="#" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ article.title }}</a>
                         <p class="text-sm pb-3">
                             By <a href="#" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date("F j, Y") }}

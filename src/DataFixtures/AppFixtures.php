@@ -187,7 +187,11 @@ class AppFixtures extends Fixture
             $manager->persist($section);
         }
 
-        $tagCount = min(($artLength / 4), 25);
+        if (($artLength / 4) < 25) {
+            $tagCount = 25;
+        }else {
+            $tagCount = $artLength / 4;
+        }
 
         shuffle($arts); // ...or I could shuffle it again :)
 
