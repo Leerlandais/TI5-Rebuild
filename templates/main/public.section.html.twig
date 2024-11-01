@@ -1,6 +1,7 @@
 {% extends "main/public.main.html.twig" %}
 
 {% block content %}
+    {{ parent() }}
     {% for section in sections %}
 <h2>{{ section.sectionTitle }}</h2>
     {% endfor %}

@@ -12,13 +12,13 @@
                     <article class="flex flex-col shadow my-4">
                         <!-- Article Image -->
                         <div class="bg-white flex flex-col justify-start p-6">
-                        <a href="#" class="hover:opacity-75">
-                            {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
-                            <img src="{{ imgSrc }}" alt="missing image" class="float-right h-32 w-32">
-
-                        </a>
-
-                        <a href="#" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ article.title }}</a>
+                            <div class="flex flex-row items-center gap-8">
+                                <a href="#" class="hover:opacity-75">
+                                    {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
+                                    <img src="{{ imgSrc }}" alt="missing image" class="h-32 w-32">
+                                </a>
+                                <a href="#" class="text-3xl font-bold hover:text-gray-700 pb-4 text-center pt-20">{{ article.title }}</a>
+                            </div>
                         <p class="text-sm pb-3">
                             By <a href="#" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date("F j, Y") }}
                         </p>
