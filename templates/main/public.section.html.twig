@@ -1,0 +1,8 @@
+{% extends "main/public.main.html.twig" %}
+
+{% block content %}
+    {% for section in sections %}
+<h2>{{ section.sectionTitle }}</h2>
+    {% endfor %}
+    {% block sideBar %}{{ parent() }}{% endblock %}
+{% endblock %}

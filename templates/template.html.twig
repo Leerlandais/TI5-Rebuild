@@ -56,7 +56,7 @@
     <!-- Text Header -->
     <header class="w-full container mx-auto">
         <div class="flex flex-col items-center py-12">
-            <a class="font-bold text-gray-800 uppercase hover:text-gray-700 text-5xl" href="#">
+            <a class="font-bold text-gray-800 uppercase hover:text-gray-700 text-5xl" href="{{ path('public_home') }}">
                 Minimal Blog
             </a>
             <p class="text-lg text-gray-600">
@@ -80,12 +80,9 @@
     </div>
     <div :class="open ? 'block': 'hidden'" class="w-full flex-grow sm:flex sm:items-center sm:w-auto">
         <div class="w-full container mx-auto flex flex-col sm:flex-row items-center justify-center text-sm font-bold uppercase mt-0 px-6 py-2">
-            <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Technology</a>
-            <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Automotive</a>
-            <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Finance</a>
-            <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Politics</a>
-            <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Culture</a>
-            <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Sports</a>
+            {% for section in sections %}
+            <a href="{{ path("public_section", { slug: section.sectionSlug }) }}" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">{{ section.sectionTitle }}</a>
+            {% endfor %}
         </div>
     </div>
 </nav>
@@ -107,17 +104,14 @@
             </div>
 
             <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                <p class="text-xl font-semibold pb-5">Instagram</p>
+                <p class="text-xl font-semibold pb-5">Our Authors</p>
                 <div class="grid grid-cols-3 gap-3">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=1" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=2" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=3" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=4" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=5" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=6" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=7" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=8" alt="carouselSide">
-                    <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=9" alt="carouselSide">
+                    {% set authors = authors|shuffle %}
+                    {% for author in authors %}
+                        {% set imgSrc = author.imgLoc starts with 'http' ? author.imgLoc : asset(author.imgLoc) %}
+                    <img class="hover:opacity-75 h-32 w-32" src="{{ imgSrc }}" alt="carouselSide">
+                    {% endfor %}
+
                 </div>
                 <a href="#" class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6">
                     <i class="fab fa-instagram mr-2"></i> Follow @dgrzyb

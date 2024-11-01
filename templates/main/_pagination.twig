@@ -1,0 +1,26 @@
+{# NEED TO FIGURE OUT HOW TO APPLY THIS TO PRETTY UP MY PAGINATION #}
+<div class="flex items-center py-8">
+    {# Previous Page Link #}
+    {% if pagination.previousPageNumber is defined %}
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': pagination.previousPageNumber})) }}"
+           class="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center">
+            Previous
+        </a>
+    {% endif %}
+
+    {# Page Number Links #}
+    {% for page in pagination.pagesInRange %}
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': page})) }}"
+           class="h-10 w-10 {{ page == pagination.currentPageNumber ? 'bg-blue-800 text-white' : 'text-gray-800 hover:bg-blue-600 hover:text-white' }} font-semibold text-sm flex items-center justify-center">
+            {{ page }}
+        </a>
+    {% endfor %}
+
+    {# Next Page Link #}
+    {% if pagination.nextPageNumber is defined %}
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': pagination.nextPageNumber})) }}"
+           class="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center ml-3">
+            Next <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+    {% endif %}
+</div>
