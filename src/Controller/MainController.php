@@ -36,6 +36,21 @@ class MainController extends AbstractController
         );
     }
 
+    private function getPaginationBySection(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request, string $section) : \Knp\Component\Pager\Pagination\PaginationInterface
+    {
+        $queryBuilder = $em->getRepository(Article::class)->createQueryBuilder('a')
+            ->where('a.published = 1')
+            ->join('a.sections', 's')
+            ->where('s.section_slug = :section')
+            ->setParameter('section', $section)
+            ->orderBy('a.id', 'DESC');
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5
+        );
+    }
     #[Route('/', name: 'public_home')]
     public function index(EntityManagerInterface $em, PaginatorInterface $pagi, Request $request): Response
     {
@@ -57,7 +72,7 @@ class MainController extends AbstractController
         return $this->render('main/public.section.html.twig', [
             'sections' => $sections,
             'authors' => $this->getAuthors($em),
-            'pagination' => $this->getPagination($em, $pagi, $request),
+            'pagination' => $this->getPaginationBySection($em, $pagi, $request, $slug),
         ]);
     }
 }
