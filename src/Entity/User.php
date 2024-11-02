@@ -54,6 +54,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $img_loc = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $quote = null;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -220,6 +223,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImgLoc(string $img_loc): static
     {
         $this->img_loc = $img_loc;
+
+        return $this;
+    }
+
+    public function getQuote(): ?string
+    {
+        return $this->quote;
+    }
+
+    public function setQuote(string $quote): static
+    {
+        $this->quote = $quote;
 
         return $this;
     }

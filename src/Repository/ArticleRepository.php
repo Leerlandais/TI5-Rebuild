@@ -33,7 +33,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->andWhere('a.published = true')
             ->andWhere('a.user = :author')
             ->setParameter('author', $author)
-            ->orderBy('a.article_date_posted', 'ASC')
+            ->orderBy('a.article_date_posted', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 // load other dependencies
+use phpDocumentor\Reflection\Utils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Faker\Factory AS Faker;
 use Cocur\Slugify\Slugify;
@@ -52,6 +53,11 @@ class AppFixtures extends Fixture
         return ("https://randomuser.me/api/portraits/$sex/$img.jpg");
     }
 
+    private function createQuote()
+    {
+        return $this->faker->realText(mt_rand(15, 100));
+    }
+
     private function createPubDate($maxDate): DateTime
     {
         return $this->faker->dateTimeBetween($maxDate,(clone $maxDate)->modify('+2 months'));
@@ -74,6 +80,7 @@ class AppFixtures extends Fixture
         $super->setEmail("lee@leerlandais.com");
         $super->setActivate(true);
         $super->setImgLoc("../assets/img/lee.jpg");
+        $super->setQuote("Eat, Code, Sleep, Repeat");
 
         $this->admins[] = $super;
         $manager->persist($super);
@@ -87,6 +94,7 @@ class AppFixtures extends Fixture
         $super->setEmail("michael.pitz@cf2m.be");
         $super->setActivate(true);
         $super->setImgLoc("../assets/img/mjp.jpg");
+        $super->setQuote("En Gelbique");
 
         $this->admins[] = $super;
         $manager->persist($super);
@@ -101,6 +109,7 @@ class AppFixtures extends Fixture
         $admin->setEmail($this->faker->email());
         $admin->setActivate(true);
         $admin->setImgLoc($this->createImage());
+        $admin->setQuote($this->createQuote());
 
         $this->admins[] = $admin;
         $manager->persist($admin);
@@ -116,6 +125,7 @@ class AppFixtures extends Fixture
             $redac->setEmail($this->faker->email());
             $redac->setActivate(true);
             $redac->setImgLoc($this->createImage());
+            $redac->setQuote($this->createQuote());
 
             $this->admins[] = $redac;
             $manager->persist($redac);
@@ -132,6 +142,7 @@ class AppFixtures extends Fixture
             $user->setEmail($this->faker->email());
             $user->setActivate(mt_rand(0, 3));
             $user->setImgLoc($this->createImage());
+            $user->setQuote($this->createQuote());
 
             $this->users[] = $user;
             $manager->persist($user);
