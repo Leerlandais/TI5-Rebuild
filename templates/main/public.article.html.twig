@@ -18,23 +18,23 @@
                 {% endfor %}
                 <p class="text-3xl font-bold hover:text-gray-700 pb-4">{{ article.title }}</p>
                 <p class="text-sm pb-8">
-                    By <a href="{{ path('public_author', { id: article.user.id }) }}" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}b</a>, Published on {{ article.article_date_posted | date('F j, Y') }}
+                    By <a href="{{ path('public_author', { id: article.user.id }) }}" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date('F j, Y') }}
                 </p>
                 <p class="pb-3">{{ article.text }}</p>
             </div>
         </article>
-{# #}
+
         <div class="w-full flex pt-6">
-            <a href="#" class="w-1/2 bg-white shadow hover:shadow-md text-left p-6">
+            <a href="{{ path('public_article', { slug: prev_art.titleSlug }) }}" class="w-1/2 bg-white shadow hover:shadow-md text-left p-6">
                 <p class="text-lg text-blue-800 font-bold flex items-center"><i class="fas fa-arrow-left pr-1"></i> Previous</p>
-                <p class="pt-2">Lorem Ipsum Dolor Sit Amet Dolor Sit Amet</p>
+                <p class="pt-2">{{ prev_art.title }}</p>
             </a>
-            <a href="#" class="w-1/2 bg-white shadow hover:shadow-md text-right p-6">
+            <a href="{{ path('public_article', { slug: next_art.titleSlug }) }}" class="w-1/2 bg-white shadow hover:shadow-md text-right p-6">
                 <p class="text-lg text-blue-800 font-bold flex items-center justify-end">Next <i class="fas fa-arrow-right pl-1"></i></p>
-                <p class="pt-2">Lorem Ipsum Dolor Sit Amet Dolor Sit Amet</p>
+                <p class="pt-2">{{ next_art.title }}</p>
             </a>
         </div>
-{#  #}
+
         <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
             <div class="w-full md:w-1/5 flex justify-center md:justify-start pb-4">
                 <img src="https://source.unsplash.com/collection/1346951/150x150?sig=1" class="rounded-full shadow h-32 w-32">

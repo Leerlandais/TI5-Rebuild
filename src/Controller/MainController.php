@@ -14,54 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    private function getAuthors(EntityManagerInterface $em): array
-    {
-        return $em->getRepository(User::class)->createQueryBuilder('u')
-            ->where('u.roles NOT LIKE :role')
-            ->setParameter('role', '%ROLE_USER%')
-            ->getQuery()
-            ->getResult();
-    }
 
-    private function getPagination(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request): \Knp\Component\Pager\Pagination\PaginationInterface
-    {
-        $queryBuilder = $em->getRepository(Article::class)->createQueryBuilder('a')
-            ->where('a.published = 1')
-            ->orderBy('a.article_date_posted', 'DESC');
-
-        return $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
-            5
-        );
-    }
-
-    private function getPaginationBySection(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request, string $section): \Knp\Component\Pager\Pagination\PaginationInterface
-    {
-        $queryBuilder = $em->getRepository(Article::class)->createQueryBuilder('a')
-            ->where('a.published = 1')
-            ->join('a.sections', 's')
-            ->where('s.section_slug = :section')
-            ->setParameter('section', $section)
-            ->orderBy('a.id', 'DESC');
-
-        return $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
-            5
-        );
-    }
-
-    private function getPaginationByAuthor(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request, int $id): \Knp\Component\Pager\Pagination\PaginationInterface
-    {
-        $queryBuilder = $em->getRepository(Article::class)->findBy(['user' => $id]);
-
-        return $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
-            5
-        );
-    }
 
 
 
@@ -69,11 +22,12 @@ class MainController extends AbstractController
     #[Route('/', name: 'public_home')]
     public function index(EntityManagerInterface $em, PaginatorInterface $pagi, Request $request): Response
     {
+        $artRepo = $em->getRepository(Article::class);
         $sections = $em->getRepository(Section::class)->findAll();
         return $this->render('main/public.main.html.twig', [
-            'pagination' => $this->getPagination($em, $pagi, $request),
+            'pagination' => $artRepo->getPagination($em, $pagi, $request),
             'sections' => $sections,
-            'authors' => $this->getAuthors($em),
+            'authors' => $artRepo->getAuthors($em),
         ]);
     }
 
@@ -88,11 +42,13 @@ class MainController extends AbstractController
             ->getQuery()
             ->getResult();
 
+        $artRepo = $em->getRepository(Article::class);
+
         return $this->render('main/public.section.html.twig', [
             'section' => $section,
             'sections' => $sections,
-            'authors' => $this->getAuthors($em),
-            'pagination' => $this->getPaginationBySection($em, $pagi, $request, $slug),
+            'authors' => $artRepo->getAuthors($em),
+            'pagination' => $artRepo->getPaginationBySection($em, $pagi, $request, $slug),
         ]);
     }
 
@@ -101,8 +57,14 @@ class MainController extends AbstractController
     {
         $author = $em->getRepository(User::class)->find($id);
         $sections = $em->getRepository(Section::class)->findAll();
-        $articleCount = $em->getRepository(Article::class)
-            ->count(['user' => $id]);
+        $articleCount = $em->createQueryBuilder()
+            ->select('count(a.id)')
+            ->from(Article::class, 'a')
+            ->where('a.user = :user')
+            ->setParameter('user', $id)
+            ->andWhere('a.published = true')
+            ->getQuery()
+            ->getSingleScalarResult();
         // did the same for authors as for sections
         $authors = $em->getRepository(User::class)->createQueryBuilder('u')
             ->where('u.id != :id')
@@ -111,11 +73,11 @@ class MainController extends AbstractController
             ->setParameter('id', $id)
             ->getQuery()
             ->getResult();
-
+        $artRepo = $em->getRepository(Article::class);
         return $this->render('main/public.author.html.twig', [
             'author' => $author,
             'authors' => $authors,
-            'pagination' => $this->getPaginationByAuthor($em, $pagi, $request, $id),
+            'pagination' => $artRepo->getPaginationByAuthor($em, $pagi, $request, $id),
             'sections' => $sections,
             'articleCount' => $articleCount,
         ]);
@@ -129,7 +91,7 @@ class MainController extends AbstractController
         $author = $art->getUser()->getId();
 
         $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
-        dd($articles);
+
         $sections = $articles['main']->getSections();
 
         return $this->render('main/public.article.html.twig', [
