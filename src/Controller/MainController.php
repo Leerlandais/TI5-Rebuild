@@ -66,13 +66,8 @@ class MainController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
         // did the same for authors as for sections
-        $authors = $em->getRepository(User::class)->createQueryBuilder('u')
-            ->where('u.id != :id')
-            ->andWhere('u.roles NOT LIKE :role')
-            ->setParameter('role', '%ROLE_USER%')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getResult();
+        $userRepo = $em->getRepository(User::class);
+        $authors = $userRepo->getAllAuthors($id);
         $artRepo = $em->getRepository(Article::class);
         return $this->render('main/public.author.html.twig', [
             'author' => $author,
@@ -89,7 +84,8 @@ class MainController extends AbstractController
         $art = $em->getRepository(Article::class)->findOneBy(['title_slug' => $slug]);
         $artId = $art->getId();
         $author = $art->getUser()->getId();
-
+        $userRepo = $em->getRepository(User::class);
+        $authors = $userRepo->getAllAuthors($author);
         $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
 
         $sections = $articles['main']->getSections();
@@ -99,6 +95,7 @@ class MainController extends AbstractController
             'prev_art' => $articles['prev'],
             'next_art' => $articles['next'],
             'sections' => $sections,
+            'authors' => $authors,
         ]);
     }
 }
