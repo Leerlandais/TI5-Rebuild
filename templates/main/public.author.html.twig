@@ -1,0 +1,14 @@
+{% extends "main/public.main.html.twig" %}
+
+{% block content %}
+    <h2 class="font-bold text-gray-800 uppercase hover:text-gray-600 text-3xl text-center">{{ author.fullname }}</h2>
+    {% if articleCount > 0 %}
+    <h4 class="font-bold text-gray-800 uppercase hover:text-gray-600 text-1xl text-center">{{ articleCount }} Article{% if articleCount > 1 %}s{% endif %}</h4>
+    {% else %}
+        <h4 class="font-bold text-gray-800 uppercase hover:text-gray-600 text-1xl text-center">Has not written any articles....Yet!</h4>
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+

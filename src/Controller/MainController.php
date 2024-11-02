@@ -51,11 +51,23 @@ class MainController extends AbstractController
             5
         );
     }
+
+    private function getPaginationByAuthor(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request, int $id) : \Knp\Component\Pager\Pagination\PaginationInterface
+    {
+        $queryBuilder = $em->getRepository(Article::class)->findBy(['user' => $id]);
+
+        return $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            5
+        );
+    }
+
+
+
     #[Route('/', name: 'public_home')]
     public function index(EntityManagerInterface $em, PaginatorInterface $pagi, Request $request): Response
     {
-
-
         $sections = $em->getRepository(Section::class)->findAll();
         return $this->render('main/public.main.html.twig', [
             'pagination' => $this->getPagination($em, $pagi, $request),
@@ -67,12 +79,31 @@ class MainController extends AbstractController
     #[Route('/section/{slug}', name: 'public_section')]
     public function section(EntityManagerInterface $em, string $slug, PaginatorInterface $pagi, Request $request): Response
     {
-        $sections = $em->getRepository(Section::class)->findBy(['section_slug' => $slug]);
+        $section = $em->getRepository(Section::class)->findOneBy(['section_slug' => $slug]);
+
+        $sections = $em->getRepository(Section::class)->findAll();
 
         return $this->render('main/public.section.html.twig', [
+            'section' => $section,
             'sections' => $sections,
             'authors' => $this->getAuthors($em),
             'pagination' => $this->getPaginationBySection($em, $pagi, $request, $slug),
         ]);
+    }
+
+    #[Route('/author/{id}', name: 'public_author')]
+    public function author(EntityManagerInterface $em, int $id, PaginatorInterface $pagi, Request $request): Response
+    {
+        $author = $em->getRepository(User::class)->find($id);
+        $sections = $em->getRepository(Section::class)->findAll();
+        $articleCount = $em->getRepository(Article::class)
+            ->count(['user' => $id]);
+        return $this->render('main/public.author.html.twig', [
+            'author' => $author,
+            'authors' => $this->getAuthors($em),
+            'pagination' => $this->getPaginationByAuthor($em, $pagi, $request, $id),
+            'sections' => $sections,
+            'articleCount' => $articleCount,
+            ]);
     }
 }

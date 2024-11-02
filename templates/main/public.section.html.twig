@@ -1,9 +1,7 @@
 {% extends "main/public.main.html.twig" %}
 
 {% block content %}
-    {{ parent() }}
-    {% for section in sections %}
-<h2>{{ section.sectionTitle }}</h2>
-    {% endfor %}
 
+    <h2 class="font-bold text-gray-800 uppercase hover:text-gray-600 text-3xl pt-4 text-center">{{ section.sectionTitle }}</h2>
+    {{ parent() }}
 {% endblock %}
