@@ -80,8 +80,12 @@ class MainController extends AbstractController
     public function section(EntityManagerInterface $em, string $slug, PaginatorInterface $pagi, Request $request): Response
     {
         $section = $em->getRepository(Section::class)->findOneBy(['section_slug' => $slug]);
-
-        $sections = $em->getRepository(Section::class)->findAll();
+        // better like this cos it returns all sections but the current one :)
+        $sections = $em->getRepository(Section::class)->createQueryBuilder('s')
+            ->where('s.section_slug != :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('main/public.section.html.twig', [
             'section' => $section,
@@ -98,9 +102,18 @@ class MainController extends AbstractController
         $sections = $em->getRepository(Section::class)->findAll();
         $articleCount = $em->getRepository(Article::class)
             ->count(['user' => $id]);
+        // did the same for authors as for sections
+        $authors = $em->getRepository(User::class)->createQueryBuilder('u')
+            ->where('u.id != :id')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->setParameter('role', '%ROLE_USER%')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+
         return $this->render('main/public.author.html.twig', [
             'author' => $author,
-            'authors' => $this->getAuthors($em),
+            'authors' => $authors,
             'pagination' => $this->getPaginationByAuthor($em, $pagi, $request, $id),
             'sections' => $sections,
             'articleCount' => $articleCount,
