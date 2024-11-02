@@ -27,7 +27,7 @@ class MainController extends AbstractController
     {
         $queryBuilder = $em->getRepository(Article::class)->createQueryBuilder('a')
             ->where('a.published = 1')
-            ->orderBy('a.id', 'DESC');
+            ->orderBy('a.article_date_posted', 'DESC');
 
         return $paginator->paginate(
             $queryBuilder,
@@ -121,14 +121,21 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route('/article/{id}', name: 'public_article')]
-    public function article(EntityManagerInterface $em, int $id, PaginatorInterface $pagi, Request $request): Response
+    #[Route('/article/{slug}', name: 'public_article')]
+    public function article(EntityManagerInterface $em, string $slug, PaginatorInterface $pagi, Request $request): Response
     {
-        $article = $em->getRepository(Article::class)->find($id);
-        $sections = $article->getSections();
+        $art = $em->getRepository(Article::class)->findOneBy(['title_slug' => $slug]);
+        $artId = $art->getId();
+        $author = $art->getUser()->getId();
+
+        $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
+        dd($articles);
+        $sections = $articles['main']->getSections();
 
         return $this->render('main/public.article.html.twig', [
-            'article' => $article,
+            'article' => $articles['main'],
+            'prev_art' => $articles['prev'],
+            'next_art' => $articles['next'],
             'sections' => $sections,
         ]);
     }

@@ -16,23 +16,27 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    public function findAdjacentArticles(int $id): array
+    public function findAdjacentArticles(int $id, int $author): array
     {
-        $currentArticle = $this->find($id);
-        if (!$currentArticle) {
-            return ['current' => null, 'previous' => null, 'next' => null];
+        $mainArticle = $this->find($id);
+        if (!$mainArticle) {
+            return ['main' => null, 'previous' => null, 'next' => null];
         }
 
         $nextArticle = $this->createQueryBuilder('a')
             ->where('a.id > :id')
             ->setParameter('id', $id)
             ->andWhere('a.published = true')
+            ->andWhere('a.user = :author')
+            ->setParameter('author', $author)
             ->orderBy('a.article_date_posted', 'ASC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
         if (!$nextArticle) {
             $nextArticle = $this->createQueryBuilder('a')
+                ->where('a.user = :author')
+                ->setParameter('author', $author)
                 ->where('a.published = true')
                 ->orderBy('a.article_date_posted', 'ASC')
                 ->setMaxResults(1)
@@ -43,6 +47,8 @@ class ArticleRepository extends ServiceEntityRepository
         $previousArticle = $this->createQueryBuilder('a')
             ->where('a.id < :id')
             ->setParameter('id', $id)
+            ->andWhere('a.user = :author')
+            ->setParameter('author', $author)
             ->andWhere('a.published = true')
             ->orderBy('a.article_date_posted', 'DESC')
             ->setMaxResults(1)
@@ -50,6 +56,8 @@ class ArticleRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
         if (!$previousArticle) {
             $previousArticle = $this->createQueryBuilder('a')
+                ->where('a.user = :author')
+                ->setParameter('author', $author)
                 ->where('a.published = true')
                 ->orderBy('a.article_date_posted', 'DESC')
                 ->setMaxResults(1)
@@ -58,8 +66,8 @@ class ArticleRepository extends ServiceEntityRepository
         }
 
         return [
-            'current' => $currentArticle,
-            'previous' => $previousArticle,
+            'main' => $mainArticle,
+            'prev' => $previousArticle,
             'next' => $nextArticle,
         ];
     }

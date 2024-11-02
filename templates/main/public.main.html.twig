@@ -4,10 +4,10 @@
     <div class="container mx-auto flex flex-wrap py-6">
         <!-- Posts Section -->
         <section class="w-full md:w-2/3 flex flex-col items-center px-3">
-        {% block posts %}
-            <div class="pagination">
-                {{ knp_pagination_render(pagination) }}
-            </div>
+            {% block posts %}
+                <div class="pagination">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
                 {% for article in pagination.items %}
                     <article class="flex flex-col shadow my-4">
                         <!-- Article Image -->
@@ -17,17 +17,17 @@
                                     {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
                                     <img src="{{ imgSrc }}" alt="missing image" class="h-32 w-32">
                                 </a>
-                                <a href="#" class="text-3xl font-bold hover:text-gray-700 pb-4 text-center pt-20">{{ article.title }}</a>
+                                <a href="{{ path('public_article', {slug: article.titleSlug}) }}" class="text-3xl font-bold hover:text-gray-700 pb-4 text-center pt-20">{{ article.title }}</a>
                             </div>
-                        <p class="text-sm pb-3">
-                            By <a href="#" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date("F j, Y") }}
-                        </p>
-                        {% set truncateText = article.text|length > 300 ? article.text|slice(0, 300) : article.text %}
-                        {% set lastSpace = truncateText|split(' ')|length - 1 %}
-                        {% set truncatedWords = truncateText|split(' ')|slice(0, lastSpace)|join(' ') %}
-                        {% set finalText = truncatedWords ~ '...' %}
-                        <a href="#" class="pb-6">{{ finalText }}</a>
-                        <a href="#" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
+                            <p class="text-sm pb-3">
+                                By <a href="{{ path('public_author', { id: article.user.id }) }}" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date("F j, Y") }}
+                            </p>
+                            {% set truncateText = article.text|length > 300 ? article.text|slice(0, 300) : article.text %}
+                            {% set lastSpace = truncateText|split(' ')|length - 1 %}
+                            {% set truncatedWords = truncateText|split(' ')|slice(0, lastSpace)|join(' ') %}
+                            {% set finalText = truncatedWords ~ '...' %}
+                            <a href="{{ path('public_article', { slug: article.titleSlug}) }}" class="pb-6">{{ finalText }}</a>
+                            <a href="{{ path('public_article', { slug: article.titleSlug}) }}" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </article>
                 {% endfor %}
@@ -36,17 +36,17 @@
                     {{ knp_pagination_render(pagination) }}
                 </div>
 
-            {#
+                {#
                 <div class="flex items-center py-8">
                     <a href="#" class="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">1</a>
                     <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center">2</a>
                     <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i class="fas fa-arrow-right ml-2"></i></a>
                 </div>
-            #}
+                #}
 
 
 
-    {% endblock %}
+            {% endblock %}
         </section>
         {% block sideBar %}{{ parent() }}{% endblock %}
     </div>
