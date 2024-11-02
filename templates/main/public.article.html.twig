@@ -35,6 +35,13 @@
             </a>
         </div>
 
+
+        <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
+            {{ dump(article.comments) }}
+        </div>
+
+
+
         <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
             <div class="w-full md:w-1/5 flex justify-center md:justify-start pb-4">
                 {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}

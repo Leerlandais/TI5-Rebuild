@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Entity\Section;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,6 +88,9 @@ class MainController extends AbstractController
         $userRepo = $em->getRepository(User::class);
         $authors = $userRepo->getAllAuthors($author);
         $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
+        $commRepo = $em->getRepository(Comment::class);
+
+
 
         $sections = $articles['main']->getSections();
 
