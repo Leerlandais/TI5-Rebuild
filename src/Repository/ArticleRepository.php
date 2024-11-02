@@ -33,7 +33,6 @@ class ArticleRepository extends ServiceEntityRepository
             ->andWhere('a.published = true')
             ->andWhere('a.user = :author')
             ->setParameter('author', $author)
-            ->orderBy('a.article_date_posted', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
@@ -42,7 +41,6 @@ class ArticleRepository extends ServiceEntityRepository
                 ->where('a.user = :author')
                 ->setParameter('author', $author)
                 ->andWhere('a.published = true')
-                ->orderBy('a.article_date_posted', 'ASC')
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getOneOrNullResult();
@@ -54,7 +52,6 @@ class ArticleRepository extends ServiceEntityRepository
             ->andWhere('a.user = :author')
             ->setParameter('author', $author)
             ->andWhere('a.published = true')
-            ->orderBy('a.article_date_posted', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
@@ -63,7 +60,6 @@ class ArticleRepository extends ServiceEntityRepository
                 ->where('a.user = :author')
                 ->setParameter('author', $author)
                 ->andWhere('a.published = true')
-                ->orderBy('a.article_date_posted', 'DESC')
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getOneOrNullResult();
