@@ -16,28 +16,51 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    //    /**
-    //     * @return Article[] Returns an array of Article objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findAdjacentArticles(int $id): array
+    {
+        $currentArticle = $this->find($id);
+        if (!$currentArticle) {
+            return ['current' => null, 'previous' => null, 'next' => null];
+        }
 
-    //    public function findOneBySomeField($value): ?Article
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $nextArticle = $this->createQueryBuilder('a')
+            ->where('a.id > :id')
+            ->setParameter('id', $id)
+            ->andWhere('a.published = true')
+            ->orderBy('a.article_date_posted', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if (!$nextArticle) {
+            $nextArticle = $this->createQueryBuilder('a')
+                ->where('a.published = true')
+                ->orderBy('a.article_date_posted', 'ASC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
+        $previousArticle = $this->createQueryBuilder('a')
+            ->where('a.id < :id')
+            ->setParameter('id', $id)
+            ->andWhere('a.published = true')
+            ->orderBy('a.article_date_posted', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if (!$previousArticle) {
+            $previousArticle = $this->createQueryBuilder('a')
+                ->where('a.published = true')
+                ->orderBy('a.article_date_posted', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
+        return [
+            'current' => $currentArticle,
+            'previous' => $previousArticle,
+            'next' => $nextArticle,
+        ];
+    }
 }
