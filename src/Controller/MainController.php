@@ -89,7 +89,14 @@ class MainController extends AbstractController
         $authors = $userRepo->getAllAuthors($author);
         $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
         $commRepo = $em->getRepository(Comment::class);
-
+        /*
+         *  Need to select all comments...
+         * ...once that's done, tidy up the repositories...
+         * ...this means, get all the repositories via the construct and change all the routing functions so that they no longer get the repos!
+         * Finish off the comment stuff and create a new tag for Git
+         * Then make a new branch for the repo tidying
+         * Once that's done, implement the admin side (update the Git tag - make sure there's a hard save before starting the admin side but make sure public end is 100% finished first!)
+         */
 
 
         $sections = $articles['main']->getSections();
