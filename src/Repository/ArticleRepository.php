@@ -90,7 +90,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            100
+            5
         );
     }
 
@@ -106,7 +106,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            100
+            5
         );
     }
 

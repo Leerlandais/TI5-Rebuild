@@ -1,6 +1,9 @@
 {% extends "template.html.twig" %}
 
 {% block content %}
+    {% if errorMessage is defined and errorMessage is not null %}
+        <h3 class="text-center text-3xl font-semibold text-red-500">{{ errorMessage }}</h3>
+    {% endif %}
     <div class="container mx-auto flex flex-wrap py-6">
         <!-- Posts Section -->
         <section class="w-full md:w-2/3 flex flex-col items-center px-3">
@@ -17,7 +20,7 @@
                                     {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
                                     <img src="{{ imgSrc }}" alt="missing image" class="h-32 w-32">
                                 </a>
-                                <a href="{{ path('public_article', {slug: article.titleSlug}) }}" class="text-3xl font-bold hover:text-gray-700 pb-4 text-center pt-20">{{ article.title }}</a>
+                                <a href="{{ path('public_article', {slug: article.titleSlug, id: article.id}) }}" class="text-3xl font-bold hover:text-gray-700 pb-4 text-center pt-20">{{ article.title }}</a>
                             </div>
                             <p class="text-sm pb-3">
                                 By <a href="{{ path('public_author', { id: article.user.id }) }}" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date("F j, Y") }}
@@ -26,8 +29,8 @@
                             {% set lastSpace = truncateText|split(' ')|length - 1 %}
                             {% set truncatedWords = truncateText|split(' ')|slice(0, lastSpace)|join(' ') %}
                             {% set finalText = truncatedWords ~ '...' %}
-                            <a href="{{ path('public_article', { slug: article.titleSlug}) }}" class="pb-6">{{ finalText }}</a>
-                            <a href="{{ path('public_article', { slug: article.titleSlug}) }}" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
+                            <a href="{{ path('public_article', { slug: article.titleSlug, id: article.id}) }}" class="pb-6">{{ finalText }}</a>
+                            <a href="{{ path('public_article', { slug: article.titleSlug, id: article.id}) }}" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </article>
                 {% endfor %}
