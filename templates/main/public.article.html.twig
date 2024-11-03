@@ -29,11 +29,11 @@
         </article>
 
         <div class="w-full flex pt-6">
-            <a href="{{ path('public_article', { slug: prev_art.titleSlug }) }}" class="w-1/2 bg-white shadow hover:shadow-md text-left p-6">
+            <a href="{{ path('public_article', { slug: prev_art.titleSlug, id: prev_art.id }) }}" class="w-1/2 bg-white shadow hover:shadow-md text-left p-6">
                 <p class="text-lg text-blue-800 font-bold flex items-center"><i class="fas fa-arrow-left pr-1"></i> Previous</p>
                 <p class="pt-2">{{ prev_art.title }}</p>
             </a>
-            <a href="{{ path('public_article', { slug: next_art.titleSlug }) }}" class="w-1/2 bg-white shadow hover:shadow-md text-right p-6">
+            <a href="{{ path('public_article', { slug: next_art.titleSlug, id: next_art.id }) }}" class="w-1/2 bg-white shadow hover:shadow-md text-right p-6">
                 <p class="text-lg text-blue-800 font-bold flex items-center justify-end">Next <i class="fas fa-arrow-right pl-1"></i></p>
                 <p class="pt-2">{{ next_art.title }}</p>
             </a>

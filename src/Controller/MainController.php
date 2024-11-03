@@ -95,29 +95,31 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route('/article/{slug}', name: 'public_article')]
-    public function article(EntityManagerInterface $em, string $slug, PaginatorInterface $pagi, Request $request): Response
+    #[Route('/article/{slug}/{id}', name: 'public_article')]
+    public function article(EntityManagerInterface $em, string $slug, int $id, PaginatorInterface $pagi, Request $request): Response
     {
         $art = $this->articleRepository->findOneBy(['title_slug' => $slug]);
-        $artId = $art->getId();
+        if($art->getId() !== $id){
+            $art = $this->articleRepository->findOneBy(['id' => $id]);
+        }
         $author = $art->getUser()->getId();
         $authors = $this->userRepository->getAllAuthors($author);
-        $articles = $this->articleRepository->findAdjacentArticles($artId, $author);
+        $articles = $this->articleRepository->findAdjacentArticles($id, $author);
         $artComms = $this->articleRepository->createQueryBuilder('a')
             ->leftJoin('a.comments', 'c')
             ->leftJoin('a.user', 'u')
             ->addSelect('c', 'u')
-            ->where('a.id = :art')
-            ->setParameter('art', $artId)
+            ->where('a.title_slug = :slug')
+            ->setParameter('slug', $slug)
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
 
         if ($artComms) {
-
             $comments = $artComms->getComments();
-
         } else {
-            echo "Article not found.";
+            $comments = null;
         }
         /*
          * ...once that's done, tidy up the repositories...
