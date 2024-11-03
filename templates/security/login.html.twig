@@ -1,12 +1,10 @@
-{% extends 'template.html.twig' %}
+{% extends 'main/public.main.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
-{% block navBar %}{% endblock %}
-{% block sectionNav %}{% endblock %}
-{% block sideBar %}{% endblock %}
-{% block content %}
 
-    <form method="post">
+{% block content %}
+<div class="max-w-screen-sm text-center mx-auto">
+    <form method="post" class="flex flex-col">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
@@ -19,9 +17,9 @@
 
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="username">Username</label>
-        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username" required autofocus>
+        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control border border-2 border-gray-800" autocomplete="username" required autofocus>
         <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+        <input type="password" name="_password" id="password" class="form-control border border-2 border-gray-800" autocomplete="current-password" required>
 
         <input type="hidden" name="_csrf_token"
                value="{{ csrf_token('authenticate') }}"
@@ -41,5 +39,5 @@
             Sign in
         </button>
     </form>
-
+</div>
 {% endblock %}
