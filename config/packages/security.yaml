@@ -39,6 +39,7 @@ security:
         ROLE_REDAC: [ ROLE_USER ]
     access_control:
          - { path: ^/user, roles: ROLE_ADMIN }
+         - { path: ^/article, roles: ROLE_REDAC }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

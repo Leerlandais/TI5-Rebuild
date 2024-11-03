@@ -16,7 +16,7 @@
                             <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_logout") }}">Admin Controls</a></li>
                         {% endif %}
                         {% if is_granted("ROLE_REDAC") %}
-                            <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_logout") }}">Redac Controls</a></li>
+                            <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_article_new") }}">Redac Controls</a></li>
                         {% endif %}
                     </ul>
                 </nav>
