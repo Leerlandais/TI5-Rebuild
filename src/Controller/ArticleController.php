@@ -53,7 +53,7 @@ final class ArticleController extends AbstractController
            // dd($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('public_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('article/new.html.twig', [
