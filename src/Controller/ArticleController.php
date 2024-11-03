@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Cocur\Slugify\Slugify;
 
 #[Route('/article')]
 final class ArticleController extends AbstractController
@@ -35,15 +36,24 @@ final class ArticleController extends AbstractController
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            $article->setArticleDateCreated(new \DateTime());
+            $article->setUser($user);
+            $article->setPublished(true);
+            $title = $article->getTitle();
+            $slug = Slugify::create()->slugify($title);
+            $article->setTitleSlug($slug);
             $entityManager->persist($article);
+           // dd($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('public_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('article/new.html.twig', [

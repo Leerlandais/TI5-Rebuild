@@ -17,29 +17,38 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('title_slug')
+          //  ->add('title_slug')
             ->add('text')
-            ->add('article_date_created', null, [
+          /*  ->add('article_date_created', null, [
                 'widget' => 'single_text',
             ])
+          */
+          /*
             ->add('article_date_posted', null, [
                 'widget' => 'single_text',
             ])
+          */
+          /*
             ->add('published')
+          */
             ->add('sections', EntityType::class, [
                 'class' => Section::class,
-                'choice_label' => 'id',
+                'choice_label' => 'section_title',
                 'multiple' => true,
+                'expanded' => true,
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'choice_label' => 'id',
+                'choice_label' => 'tag_name',
                 'multiple' => true,
+                'expanded' => true,
             ])
+            /*
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
             ])
+            */
         ;
     }
 
