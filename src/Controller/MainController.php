@@ -62,6 +62,7 @@ class MainController extends AbstractController
             'sections' => $sections,
             'authors' => $this->articleRepository->getAuthors($em),
             'userName' => $userName,
+
         ]);
     }
 

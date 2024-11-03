@@ -33,7 +33,8 @@
             </a>
             {% if is_granted("IS_AUTHENTICATED") %}
             <p class="text-lg text-gray-600">
-                Welcome, {{ userName }}
+
+                Welcome,{% if userName is defined and userName is not null %} {{ userName }} {% endif %}
             </p>
             {% endif %}
         </div>

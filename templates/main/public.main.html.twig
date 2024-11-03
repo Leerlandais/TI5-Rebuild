@@ -1,6 +1,9 @@
 {% extends "template.html.twig" %}
 
 {% block content %}
+    {% if errorMessage is defined and errorMessage is not null %}
+        <h3 class="text-center text-3xl font-semibold text-red-500">{{ errorMessage }}</h3>
+    {% endif %}
     <div class="container mx-auto flex flex-wrap py-6">
         <!-- Posts Section -->
         <section class="w-full md:w-2/3 flex flex-col items-center px-3">
