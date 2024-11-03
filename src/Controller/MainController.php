@@ -22,21 +22,21 @@ class MainController extends AbstractController
 {
 
     private $articleRepository;
-    private $commentRepository;
+  //  private $commentRepository;
     private $sectionRepository;
-    private $tagRepository;
+  //  private $tagRepository;
     private $userRepository;
 
     public function __construct(ArticleRepository $articleRepository,
-                                CommentRepository $commentRepository,
+                             //   CommentRepository $commentRepository,
                                 SectionRepository $sectionRepository,
-                                TagRepository $tagRepository,
+                             //   TagRepository $tagRepository,
                                 UserRepository $userRepository)
     {
         $this->articleRepository = $articleRepository;
-        $this->commentRepository = $commentRepository;
+    //    $this->commentRepository = $commentRepository;
         $this->sectionRepository = $sectionRepository;
-        $this->tagRepository = $tagRepository;
+    //    $this->tagRepository = $tagRepository;
         $this->userRepository = $userRepository;
     }
 
@@ -98,14 +98,12 @@ class MainController extends AbstractController
     #[Route('/article/{slug}', name: 'public_article')]
     public function article(EntityManagerInterface $em, string $slug, PaginatorInterface $pagi, Request $request): Response
     {
-        $art = $em->getRepository(Article::class)->findOneBy(['title_slug' => $slug]);
+        $art = $this->articleRepository->findOneBy(['title_slug' => $slug]);
         $artId = $art->getId();
         $author = $art->getUser()->getId();
-        $userRepo = $em->getRepository(User::class);
-        $authors = $userRepo->getAllAuthors($author);
-        $artRepo = $em->getRepository(Article::class);
-        $articles = $artRepo->findAdjacentArticles($artId, $author);
-        $artComms = $artRepo->createQueryBuilder('a')
+        $authors = $this->userRepository->getAllAuthors($author);
+        $articles = $this->articleRepository->findAdjacentArticles($artId, $author);
+        $artComms = $this->articleRepository->createQueryBuilder('a')
             ->leftJoin('a.comments', 'c')
             ->leftJoin('a.user', 'u')
             ->addSelect('c', 'u')
@@ -128,7 +126,7 @@ class MainController extends AbstractController
          * Once that's done, implement the admin side (update the Git tag - make sure there's a hard save before starting the admin side but make sure public end is 100% finished first!)
          */
 
-        $sections = $em->getRepository(Section::class)->findAll();
+        $sections = $this->sectionRepository->findAll();
         $artSections = $articles['main']->getSections();
 
         return $this->render('main/public.article.html.twig', [
