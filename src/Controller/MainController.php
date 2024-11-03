@@ -44,11 +44,15 @@ class MainController extends AbstractController
     #[Route('/', name: 'public_home')]
     public function index(EntityManagerInterface $em, PaginatorInterface $pagi, Request $request): Response
     {
+
+        $user = $this->getUser();
+        $userName = $user?->getFullname();
         $sections = $this->sectionRepository->findAll();
         return $this->render('main/public.main.html.twig', [
             'pagination' => $this->articleRepository->getPagination($em, $pagi, $request),
             'sections' => $sections,
             'authors' => $this->articleRepository->getAuthors($em),
+            'userName' => $userName,
         ]);
     }
 

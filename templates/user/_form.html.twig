@@ -1,4 +1,40 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="max-w-screen-sm text-center mx-auto">
+    {{ form_start(form) }}
+    <div class="mb-3">
+        <label for="{{ form.username.vars.id }}" class="form-label">Username</label>
+        {{ form_widget(form.username, {'attr': {'class': "form-control", 'placeholder': 'Name'}}) }}
+        {{ form_errors(form.username) }}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.fullname.vars.id }}" class="form-label">Full Name</label>
+        {{ form_widget(form.fullname, {'attr': {'class': "form-control", 'placeholder': 'Your full name'}}) }}
+        {{ form_errors(form.fullname) }}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.email.vars.id }}" class="form-label">Email</label>
+        {{ form_widget(form.email, {'attr': {'class': "form-control", 'placeholder': 'Email Address'}}) }}
+        {{ form_errors(form.email) }}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.img_loc.vars.id }}" class="form-label">Image</label>
+        {{ form_widget(form.img_loc, {'attr': {'class': "form-control", 'placeholder': 'Image URL'}}) }}
+        {{ form_errors(form.img_loc) }}
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.quote.vars.id }}" class="form-label">Quote</label>
+        {{ form_widget(form.quote, {'attr': {'class': "form-control", 'placeholder': 'Favourite Quote'}}) }}
+        {{ form_errors(form.quote) }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        {{ form_widget(form.password.first, {'attr': {'class': "form-control", 'placeholder': 'Password'}}) }}
+        {{ form_errors(form.password.first) }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Confirm Password</label>
+        {{ form_widget(form.password.second, {'attr': {'class': "form-control", 'placeholder': 'Confirm Password'}}) }}
+        {{ form_errors(form.password.second) }}
+    </div>
+    <button class="btn btn-success fea pull-left">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</div>

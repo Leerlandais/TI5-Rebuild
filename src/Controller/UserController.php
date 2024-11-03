@@ -11,11 +11,19 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+
+    private $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -32,10 +40,18 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $textPass = $form->get('password')->getData();
+
+            $hashPass = $this->passwordHasher->hashPassword($user, $textPass);
+            $user->setPassword($hashPass);
+
+            $user->setRoles(["ROLE_USER"]);
+            $user->setUniqid(uniqid('user_', true));
+            $user->setActivate(false);
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('public_home', [], Response::HTTP_SEE_OTHER);
         }
         $sections = $entityManager->getRepository(Section::class)->findAll();
         $authors = $entityManager->getRepository(Article::class)->getAuthors($entityManager);
@@ -46,7 +62,18 @@ final class UserController extends AbstractController
             'authors' => $authors,
         ]);
     }
-
+/*
+ *           //  ->add('roles')
+          //  ->add('uniqid')
+          //  ->add('activate')
+ *             $article->setArticleDateCreated(new \DateTime());
+            $article->setUser($user);
+            $title = $article->getTitle();
+            $slug = Slugify::create()->slugify($title);
+            $article->setTitleSlug($slug);
+            $entityManager->persist($article);
+            $entityManager->flush();
+ */
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {

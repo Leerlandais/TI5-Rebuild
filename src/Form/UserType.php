@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,14 +15,17 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username')
-          //  ->add('roles')
-            ->add('password')
+          ->add('password', RepeatedType::class, [
+              'type' => PasswordType::class,
+              'invalid_message' => 'The password fields must match.',
+          ])
             ->add('fullname')
-          //  ->add('uniqid')
             ->add('email')
-          //  ->add('activate')
             ->add('img_loc')
             ->add('quote')
+          //  ->add('roles')
+          //  ->add('uniqid')
+          //  ->add('activate')
         ;
     }
 
