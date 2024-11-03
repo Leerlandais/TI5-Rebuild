@@ -35,6 +35,9 @@ class Comment
     #[ORM\Column(length: 512)]
     private ?string $comment_text = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $comment_username = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +123,18 @@ class Comment
     public function setCommentText(string $comment_text): static
     {
         $this->comment_text = $comment_text;
+
+        return $this;
+    }
+
+    public function getCommentUsername(): ?string
+    {
+        return $this->comment_username;
+    }
+
+    public function setCommentUsername(string $comment_username): static
+    {
+        $this->comment_username = $comment_username;
 
         return $this;
     }

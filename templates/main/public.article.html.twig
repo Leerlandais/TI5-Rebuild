@@ -13,9 +13,13 @@
                 <img src="{{ imgSrc }}" alt="{{ article.user.fullname }}">
             </a>
             <div class="bg-white flex flex-col justify-start p-6">
-                {% for section in sections %}
-                    <a href="{{ path('public_section', {slug: section.sectionSlug}) }}" class="text-blue-700 text-sm font-bold uppercase pb-4">{{ section.sectionTitle }}</a>
+                <div class="flex  justify-center gap-8">
+                {% for section in artSections %}
+                    <button class="rounded-md bg-blue-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 ml-2">
+                        <a href="{{ path('public_section', {slug: section.sectionSlug}) }}">{{ section.sectionTitle }}</a>
+                    </button>
                 {% endfor %}
+                </div>
                 <p class="text-3xl font-bold hover:text-gray-700 pb-4">{{ article.title }}</p>
                 <p class="text-sm pb-8">
                     By <a href="{{ path('public_author', { id: article.user.id }) }}" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date('F j, Y') }}
@@ -34,6 +38,23 @@
                 <p class="pt-2">{{ next_art.title }}</p>
             </a>
         </div>
+
+
+        <div class="w-full text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
+                <h5 class="text-xl mr-2 block">Comments </h5>
+            {% if comments|length == 0 %}
+                 <p>There are no comments for this article</p>
+            {% endif %}
+            {% for comment in comments %}
+                <div class="mb-6">
+                    by <span>{{ comment.commentUsername }}, on {{ comment.commentDateCreated | date("F j, Y") }}</span>
+                    <p class="my-4">{{ comment.commentText }}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+
+
 
         <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
             <div class="w-full md:w-1/5 flex justify-center md:justify-start pb-4">

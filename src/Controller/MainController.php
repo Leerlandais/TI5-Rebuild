@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Entity\Section;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -86,16 +87,44 @@ class MainController extends AbstractController
         $author = $art->getUser()->getId();
         $userRepo = $em->getRepository(User::class);
         $authors = $userRepo->getAllAuthors($author);
-        $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
+        $artRepo = $em->getRepository(Article::class);
+        $articles = $artRepo->findAdjacentArticles($artId, $author);
+        $artComms = $artRepo->createQueryBuilder('a')
+            ->leftJoin('a.comments', 'c')
+            ->leftJoin('a.user', 'u')
+            ->addSelect('c', 'u')
+            ->where('a.title_slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
 
-        $sections = $articles['main']->getSections();
+        if ($artComms) {
+            $comments = $artComms->getComments();
+
+        } else {
+            echo "Article not found.";
+        }
+        /*
+         *  Need to select all comments...
+         * ...once that's done, tidy up the repositories...
+         * ...this means, get all the repositories via the construct and change all the routing functions so that they no longer get the repos!
+         * Finish off the comment stuff and create a new tag for Git
+         * Then make a new branch for the repo tidying
+         * Once that's done, implement the admin side (update the Git tag - make sure there's a hard save before starting the admin side but make sure public end is 100% finished first!)
+         */
+
+        $sections = $em->getRepository(Section::class)->findAll();
+        $artSections = $articles['main']->getSections();
 
         return $this->render('main/public.article.html.twig', [
             'article' => $articles['main'],
             'prev_art' => $articles['prev'],
             'next_art' => $articles['next'],
             'sections' => $sections,
+            'artSections' => $artSections,
             'authors' => $authors,
+            'comments' => $comments,
+
         ]);
     }
 }

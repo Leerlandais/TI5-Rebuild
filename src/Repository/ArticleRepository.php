@@ -124,4 +124,6 @@ class ArticleRepository extends ServiceEntityRepository
             5
         );
     }
+
+
 }
