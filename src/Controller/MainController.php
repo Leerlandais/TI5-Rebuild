@@ -107,8 +107,8 @@ class MainController extends AbstractController
             ->leftJoin('a.comments', 'c')
             ->leftJoin('a.user', 'u')
             ->addSelect('c', 'u')
-            ->where('a.title_slug = :slug')
-            ->setParameter('slug', $slug)
+            ->where('a.id = :art')
+            ->setParameter('art', $artId)
             ->getQuery()
             ->getOneOrNullResult();
 
