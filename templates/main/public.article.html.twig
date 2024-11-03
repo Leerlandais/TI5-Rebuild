@@ -46,10 +46,10 @@
                  <p>There are no comments for this article</p>
             {% endif %}
             {% for comment in comments %}
-                <div>
-                    by <span>{{ comment.userId }}, on {{ comment.commentDateCreated | date("F j, Y") }}</span>
-                    <p>{{ comment.commentText }}</p>
-                    <h6></h6>
+                <div class="mb-6">
+                    by <span>{{ comment.commentUsername }}, on {{ comment.commentDateCreated | date("F j, Y") }}</span>
+                    <p class="my-4">{{ comment.commentText }}</p>
+                    <hr>
                 </div>
             {% endfor %}
         </div>
