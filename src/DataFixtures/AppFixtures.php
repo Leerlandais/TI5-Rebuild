@@ -229,10 +229,12 @@ class AppFixtures extends Fixture
             $artDate = $this->articles[$randArt]->getArticleDateCreated();
             $comment->setCommentDateCreated($this->createPubDate($artDate));
             $comment->setVisible(true);
-            // dd($randArt);
             $comment->setArticle($this->articles[$randArt]);
             $randUser = array_rand($this->users);
-            $comment->setUserId($randUser);
+            $username = $this->users[$randUser]->getFullname();
+           // dd($randUser, $username);
+            $comment->setUserId(($randUser + count($this->admins)+1));
+            $comment->setCommentUsername($username);
             $commentLen = mt_rand(100, 500);
             $comment->setCommentText($this->createText($commentLen));
             $manager->persist($comment);
