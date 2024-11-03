@@ -110,9 +110,10 @@ class MainController extends AbstractController
             ->where('a.title_slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
 
         if ($artComms) {
+
             $comments = $artComms->getComments();
 
         } else {
