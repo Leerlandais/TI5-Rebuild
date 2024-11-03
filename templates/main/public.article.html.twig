@@ -8,7 +8,7 @@
 
         <article class="flex flex-col shadow my-4">
             <!-- Article Image -->
-            <a href="#" class="hover:opacity-75">
+            <a href="{{ path('public_author', { id: article.user.id }) }}" class="hover:opacity-75">
                 {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
                 <img src="{{ imgSrc }}" alt="{{ article.user.fullname }}">
             </a>
@@ -62,7 +62,9 @@
         <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
             <div class="w-full md:w-1/5 flex justify-center md:justify-start pb-4">
                 {% set imgSrc = article.user.imgLoc starts with 'http' ? article.user.imgLoc : asset(article.user.imgLoc) %}
-                <img src="{{ imgSrc }}" alt="{{ article.user.fullname }}" class="rounded-full shadow h-32 w-32">
+                <a href="{{ path("public_author", { id: article.user.id }) }}">
+                    <img src="{{ imgSrc }}" alt="{{ article.user.fullname }}" class="rounded-full shadow h-32 w-32">
+                </a>
             </div>
             <div class="flex-1 flex flex-col justify-center md:justify-start">
                 <p class="font-semibold text-2xl">{{ article.user.fullname }}</p>
