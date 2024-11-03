@@ -31,7 +31,7 @@ final class UserController extends AbstractController
             'users' => $userRepository->findAll(),
         ]);
     }
-
+/*
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -62,18 +62,7 @@ final class UserController extends AbstractController
             'authors' => $authors,
         ]);
     }
-/*
- *           //  ->add('roles')
-          //  ->add('uniqid')
-          //  ->add('activate')
- *             $article->setArticleDateCreated(new \DateTime());
-            $article->setUser($user);
-            $title = $article->getTitle();
-            $slug = Slugify::create()->slugify($title);
-            $article->setTitleSlug($slug);
-            $entityManager->persist($article);
-            $entityManager->flush();
- */
+*/
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
