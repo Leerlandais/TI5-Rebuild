@@ -54,6 +54,9 @@
             {% endfor %}
         </div>
 
+        {% if is_granted("IS_AUTHENTICATED") %}
+        {% include "main/_comment.form.twig" %}
+        {% endif %}
 
 
         <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
