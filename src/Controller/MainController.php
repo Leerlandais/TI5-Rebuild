@@ -87,8 +87,23 @@ class MainController extends AbstractController
         $author = $art->getUser()->getId();
         $userRepo = $em->getRepository(User::class);
         $authors = $userRepo->getAllAuthors($author);
-        $articles = $em->getRepository(Article::class)->findAdjacentArticles($artId, $author);
-        $commRepo = $em->getRepository(Comment::class);
+        $artRepo = $em->getRepository(Article::class);
+        $articles = $artRepo->findAdjacentArticles($artId, $author);
+        $artComms = $artRepo->createQueryBuilder('a')
+            ->leftJoin('a.comments', 'c')
+            ->leftJoin('a.user', 'u')
+            ->addSelect('c', 'u')
+            ->where('a.title_slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($artComms) {
+            $comments = $artComms->getComments();
+
+        } else {
+            echo "Article not found.";
+        }
         /*
          *  Need to select all comments...
          * ...once that's done, tidy up the repositories...
@@ -98,15 +113,18 @@ class MainController extends AbstractController
          * Once that's done, implement the admin side (update the Git tag - make sure there's a hard save before starting the admin side but make sure public end is 100% finished first!)
          */
 
-
-        $sections = $articles['main']->getSections();
+        $sections = $em->getRepository(Section::class)->findAll();
+        $artSections = $articles['main']->getSections();
 
         return $this->render('main/public.article.html.twig', [
             'article' => $articles['main'],
             'prev_art' => $articles['prev'],
             'next_art' => $articles['next'],
             'sections' => $sections,
+            'artSections' => $artSections,
             'authors' => $authors,
+            'comments' => $comments,
+
         ]);
     }
 }
