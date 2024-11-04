@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
     {
         $paragraphs = [];
         for ($i = 0; $i < $nb; $i++) {
-            $paragraphs[] = $this->faker->realText(mt_rand(150, 300));
+            $paragraphs[] = $this->faker->realText(mt_rand(100, 200));
         }
         return implode("\n\n", $paragraphs);
 
@@ -235,8 +235,8 @@ class AppFixtures extends Fixture
            // dd($randUser, $username);
             $comment->setUserId(($randUser + count($this->admins)+1));
             $comment->setCommentUsername($username);
-            $commentLen = mt_rand(100, 500);
-            $comment->setCommentText($this->createText($commentLen));
+            $commentLen = mt_rand(100, 300);
+            $comment->setCommentText($this->createTitle($commentLen));
             $manager->persist($comment);
         }
 

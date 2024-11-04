@@ -10,7 +10,6 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
-                <th>Title_slug</th>
                 <th>Text</th>
                 <th>Article_date_created</th>
                 <th>Article_date_posted</th>
@@ -23,13 +22,18 @@
             <tr>
                 <td>{{ article.id }}</td>
                 <td>{{ article.title }}</td>
-                <td>{{ article.titleSlug }}</td>
-                <td>{{ article.text }}</td>
+
+                    {% set truncateText = article.text|length > 500 ? article.text|slice(0, 500) : article.text %}
+                    {% set lastSpace = truncateText|split(' ')|length - 1 %}
+                    {% set truncatedWords = truncateText|split(' ')|slice(0, lastSpace)|join(' ') %}
+                    {% set finalText = truncatedWords ~ '...' %}
+
+                <td>{{ finalText }}</td>
                 <td>{{ article.articleDateCreated ? article.articleDateCreated|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ article.articleDatePosted ? article.articleDatePosted|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ article.published ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
+                    <a href="{{ path('public_article', {'slug': article.titleSlug, 'id': article.id}) }}">show</a>
                     <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
                 </td>
             </tr>

@@ -114,7 +114,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route('/article/{slug}/{id}', name: 'public_article')]
+    #[Route('public/article/{slug}/{id}', name: 'public_article')]
     public function article(EntityManagerInterface $em, string $slug, int $id, PaginatorInterface $pagi, Request $request): Response
     {
         $userName = $this->getUserFullname();
