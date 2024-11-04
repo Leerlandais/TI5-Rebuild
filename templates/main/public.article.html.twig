@@ -20,6 +20,15 @@
                     </button>
                 {% endfor %}
                 </div>
+                <div class="flex  justify-center gap-6 mt-4">
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a href="{{ path('app_article_edit', {id: article.id}) }}">
+                            <button class="rounded-md bg-blue-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 ml-2">
+                                Edit
+                            </button>
+                        </a>
+                    {% endif %}
+                </div>
                 <p class="text-3xl font-bold hover:text-gray-700 pb-4">{{ article.title }}</p>
                 <p class="text-sm pb-8">
                     By <a href="{{ path('public_author', { id: article.user.id }) }}" class="font-semibold hover:text-gray-800">{{ article.user.fullname }}</a>, Published on {{ article.articleDatePosted | date('F j, Y') }}
@@ -87,6 +96,6 @@
         </div>
 
     </section>
-    {% block sideBar %}{{ parent() }}{% endblock %}
+    {% block sideBar %}{{ parent() }}test{% endblock %}
 </div>
 {% endblock %}

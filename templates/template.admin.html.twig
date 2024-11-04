@@ -29,11 +29,10 @@
     <header class="w-full container mx-auto">
         <div class="flex flex-col items-center py-12">
             <a href="{{ path('public_home') }}">
-                <h1 class="font-bold text-gray-800 uppercase hover:text-gray-600 text-5xl">Minimal Blog</h1>
+                <h1 class="font-bold text-gray-800 uppercase hover:text-gray-600 text-5xl">{% block headerTitle %}Add a New Article{% endblock %}</h1>
             </a>
             {% if is_granted("IS_AUTHENTICATED") %}
             <p class="text-lg text-gray-600">
-
                 Welcome,{% if userName is defined and userName is not null %} {{ userName }} {% endif %}
             </p>
             {% endif %}
@@ -42,25 +41,7 @@
 {% endblock %}
 
 {% block sectionNav %}
-<!-- Topic Nav -->
-<nav class="w-full py-4 border-t border-b bg-gray-100" x-data="{ open: false }">
-    <div class="block sm:hidden">
-        <a
-                href="#"
-                class="block md:hidden text-base font-bold uppercase text-center flex justify-center items-center"
-                @click="open = !open"
-        >
-            Topics <i :class="open ? 'fa-chevron-down': 'fa-chevron-up'" class="fas ml-2"></i>
-        </a>
-    </div>
-    <div :class="open ? 'block': 'hidden'" class="w-full flex-grow sm:flex sm:items-center sm:w-auto">
-        <div class="w-full container mx-auto flex flex-col sm:flex-row items-center justify-center text-sm font-bold uppercase mt-0 px-6 py-2">
-            {% for section in sections %}
-            <a href="{{ path("public_section", { slug: section.sectionSlug }) }}" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">{{ section.sectionTitle }}</a>
-            {% endfor %}
-        </div>
-    </div>
-</nav>
+    {% include('_admin.navbar.twig') %}
 {% endblock %}
 
 
@@ -99,18 +80,7 @@
 {% endblock %}
 {% block footer %}
     <footer class="w-full border-t bg-white pb-12">
-        {% block footerCar %}
-        <div
-                class="relative w-full flex items-center invisible md:visible md:pb-12"
-                x-data="getCarouselData()"
-        >
 
-            <template x-for="image in images.slice(currentIndex, currentIndex + 6)" :key="images.indexOf(image)">
-                <img class="w-1/6 hover:opacity-75" :src="image" alt="carouselFooter">
-            </template>
-
-        </div>
-        {% endblock %}
         <div class="w-full container mx-auto flex flex-col items-center">
             <div class="flex flex-col md:flex-row text-center md:text-left md:justify-between py-6">
                 <a href="#" class="uppercase px-3" title="Decorative Link">About Us</a>
@@ -124,29 +94,3 @@
 {% endblock %}
 
 
-{% block carousel %}
-    <script>
-        function getCarouselData() {
-            return {
-                currentIndex: 0,
-                images: [
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=1',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=2',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=3',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=4',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=5',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=6',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=7',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=8',
-                    'https://source.unsplash.com/collection/1346951/800x800?sig=9',
-                ],
-                increment() {
-                    this.currentIndex = this.currentIndex === this.images.length - 6 ? 0 : this.currentIndex + 1;
-                },
-                decrement() {
-                    this.currentIndex = this.currentIndex === this.images.length - 6 ? 0 : this.currentIndex - 1;
-                },
-            }
-        }
-    </script>
-{% endblock %}

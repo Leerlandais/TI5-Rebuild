@@ -9,6 +9,15 @@
                             <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_login") }}">Login</a></li>
                             <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path('public_user_new') }}">Signup</a></li>
                         {% endif %}
+                        {% if is_granted("ROLE_SUPER") %}
+                            <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_logout") }}">Super Controls</a></li>
+                        {% endif %}
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_logout") }}">Admin Controls</a></li>
+                        {% endif %}
+                        {% if is_granted("ROLE_REDAC") %}
+                            <li><a class="hover:text-gray-200 hover:underline px-4" href="{{ path("app_article_index") }}">Redac Controls</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             {% endblock %}
