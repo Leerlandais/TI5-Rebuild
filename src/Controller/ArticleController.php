@@ -87,7 +87,7 @@ final class ArticleController extends AbstractController
             'form' => $form,
         ]);
     }
-
+/*
     #[Route('/{id}/edit', name: 'app_article_edit_redac', methods: ['GET', 'POST'])]
     public function editRedac(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
@@ -105,7 +105,7 @@ final class ArticleController extends AbstractController
             'form' => $form,
         ]);
     }
-
+*/
     #[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
